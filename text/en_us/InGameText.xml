@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Database>
+    <EnglishText>
+        <Replace Tag="LOC_UI_KBM_MAPPING_BZ_CENTER_SELECTION">
+            <Text>Center Selection</Text>
+        </Replace>
+        <Replace Tag="LOC_UI_KBM_MAPPING_BZ_CENTER_SELECTION_TT">
+            <Text>Moves selected unit to center of the camera view</Text>
+        </Replace>
+    </EnglishText>
+</Database>

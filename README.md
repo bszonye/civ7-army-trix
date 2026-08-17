@@ -1,2 +1,2 @@
-# civ7-army-trix
-Army Trix
+# Army Trix 1.0.0
+better commander tools
