@@ -32,7 +32,7 @@ class bzArmyPanel {
   beforeDetach() { }
   afterDetach() { }
   afterInitialize() {
-    this.component.Root.classList.add("bz-army-trix");
+    this.component.Root.classList.add("bz-army-trix", "bz-army-panel");
   }
   afterCreateArmyUnitButton(unitId, button) {
     if (!ComponentID.isValid(unitId)) return;

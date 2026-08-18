@@ -50,7 +50,7 @@ class bzUnitActions {
   beforeDetach() { }
   afterDetach() { }
   afterInitialize() {
-    this.component.Root.classList.add("bz-army-trix");
+    this.component.Root.classList.add("bz-army-trix", "bz-unit-actions");
   }
   afterCreateButtons(actions) {
     if (actions == this.hiddenActions) {
