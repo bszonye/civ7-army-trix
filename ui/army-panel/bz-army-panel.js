@@ -1,5 +1,13 @@
 import { ComponentID } from '/core/ui/utilities/utilities-component-id.js';
 
+import { ComponentUtilities } from '/core/ui-next/utilities/component-utilities.js';
+ComponentUtilities.preloadImages(
+  "blp:Action_Unpack.png",
+  "fs://game/bz-army-trix/icons/bz-chevrons-1.png",
+  "fs://game/bz-army-trix/icons/bz-chevrons-2.png",
+  "fs://game/bz-army-trix/icons/bz-chevrons-3.png",
+);
+
 Controls.loadStyle("fs://game/bz-army-trix/ui/army-panel/bz-army-panel.css");
 
 class bzArmyPanel {
@@ -41,24 +49,25 @@ class bzArmyPanel {
     if (!unit || !unitBG) return;
     const unitInfo = GameInfo.Units.lookup(unit.type);
     const infoBG = document.createElement("div");
-    infoBG.classList.value = "absolute inset-1 flex flex-col items-center font-body-xs font-bold text-shadow-br";
+    infoBG.classList.value = "absolute inset-1 flex flex-col items-center font-body-sm font-bold text-shadow-br";
     const head = document.createElement("div");
-    head.classList.value = "flex flex-row w-full justify-between";
+    head.classList.value = "flex flex-row w-full items-start justify-between";
     infoBG.appendChild(head);
     const body = document.createElement("div");
     body.classList.value = "flex-auto flex flex-row w-full";
     infoBG.appendChild(body);
     const tail = document.createElement("div");
-    tail.classList.value = "flex flex-row w-full mb-2\\.5";
+    tail.classList.value = "flex flex-row items-end w-full mb-2\\.5";
     infoBG.appendChild(tail);
     // promotion
     const promo = document.createElement("div");
-    promo.classList.value = "size-5 -m-px bg-center bg-contain bg-no-repeat border border-black rounded-full";
+    promo.classList.value = "-m-px bg-center bg-contain bg-no-repeat border border-black rounded-full";
     const xp = unit.Experience;
     if (xp?.canPromote) {
       const promote = GameInfo.UnitCommands.lookup("UNITCOMMAND_PROMOTE");
       const canPromote = xp.getStoredCommendations || xp.getStoredPromotionPoints;
-      promo.classList.add("bg-info");
+      promo.classList.add("size-9");
+      promo.style.backgroundColor = "#00ccffaa";
       promo.style.backgroundImage = `url(${promote.Icon})`;
       promo.classList.toggle("invisible", !canPromote);
     } else {
@@ -66,19 +75,20 @@ class bzArmyPanel {
       const canUpgrade = Game.UnitCommands.canStart(
         unit.id, upgrade.CommandType, { X: -9999, Y: -9999 }, true
       ).Success;
-      promo.classList.add("bg-secondary-2");
+      promo.classList.add("size-6");
+      promo.style.backgroundColor = "#e5d2ac66";
       promo.style.backgroundImage = `url(${upgrade.Icon})`;
       promo.classList.toggle("invisible", !canUpgrade);
     }
     head.appendChild(promo);
     // movement
     const move = document.createElement("div");
-    move.classList.value = "text-center text-2xs";
+    move.classList.value = "text-center text-2xs leading-none";
     const moves = unit.Movement?.movementMovesRemaining ?? 0;
     const maxMoves = unit.Movement?.maxMoves ?? 0;
     const canMove = unit.Movement?.canMove;
     const moveValue = `${moves}/${maxMoves}`;
-    move.classList.toggle("text-accent-4", !canMove);
+    unitBG.classList.toggle("opacity-60", !canMove);
     // move.innerHTML = Locale.stylize(`[icon:Action_Move][n]${moveValue}`);
     move.textContent = moveValue;
     head.appendChild(move);
@@ -89,13 +99,20 @@ class bzArmyPanel {
     health.textContent = unit.Health.damage ? healthValue : "";
     tail.appendChild(health);
     // unit level or tier
-    // TODO: better tier icons?
     const rank = document.createElement("div");
-    const rankValue = unit.Experience?.canPromote ?
-      unit.Experience.getLevel :
-      unitInfo.Tier || null;
-    if (rankValue) {
-      rank.innerHTML = Locale.stylize(`[icon:NAR_REW_PROMOTION]${rankValue}`);
+    if (unit.Experience?.canPromote) {
+      rank.classList.value = "text-xl -mr-1";
+      rank.style.filter = "saturate(0)";
+      rank.innerHTML =
+        Locale.stylize(`${unit.Experience.getLevel}[icon:NAR_REW_PROMOTION]`);
+    } else if (unitInfo.Tier) {
+      const tier = unitInfo.Tier;
+      rank.classList.value = "size-8 bg-center bg-contain bg-no-repeat -mx-1\\.5";
+      const chevrons = `url(fs://game/bz-army-trix/icons/bz-chevrons-${tier}.png)`;
+      const yrem = GlobalScaling.pixelsToRem((tier - 3) * 4);
+      rank.style.filter = "saturate(0)";
+      rank.style.marginBottom = `${yrem}rem`;
+      rank.style.backgroundImage = chevrons;
     }
     tail.appendChild(rank);
     unitBG.classList.add("relative");

@@ -2,8 +2,6 @@ import { InterfaceMode } from '/core/ui/interface-modes/interface-modes.js';
 import CommanderInteract from '/base-standard/ui/commander-interact/model-commander-interact.js';
 import { UnitActionsPanelModel } from '/base-standard/ui/unit-actions/unit-actions.js';
 
-Controls.loadStyle("fs://game/bz-army-trix/ui/unit-actions/bz-unit-actions.css");
-
 import { ComponentUtilities } from '/core/ui-next/utilities/component-utilities.js';
 ComponentUtilities.preloadImages(
   "blp:action_deselect.png",
@@ -15,6 +13,8 @@ ComponentUtilities.preloadImages(
   "fs://game/action_rangedattack.png",
   "fs://game/action_treasure_fleet.png",
 );
+
+Controls.loadStyle("fs://game/bz-army-trix/ui/unit-actions/bz-unit-actions.css");
 
 class bzUnitActions {
   static c = null;
