@@ -41,9 +41,15 @@
                 <LoadOrder>1000</LoadOrder>
             </Properties>
             <Actions>
+                <ImportFiles>
+                    <Item>ui/army-panel/bz-army-panel.css</Item>
+                    <Item>ui/unit-actions/bz-unit-actions.css</Item>
+                </ImportFiles>
                 <UIScripts>
+                    <Item>ui/army-panel/bz-army-panel.js</Item>
                     <Item>ui/input/bz-hotkey-manager.js</Item>
                     <Item>ui/options/editors/bz-editor-keyboard-mapping.js</Item>
+                    <Item>ui/unit-actions/bz-unit-actions.js</Item>
                 </UIScripts>
                 <UpdateText>
                     <Item>text/en_us/InGameText.xml</Item>
