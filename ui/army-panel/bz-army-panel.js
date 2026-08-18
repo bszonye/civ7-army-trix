@@ -107,7 +107,7 @@ class bzArmyPanel {
         Locale.stylize(`${unit.Experience.getLevel}[icon:NAR_REW_PROMOTION]`);
     } else if (unitInfo.Tier) {
       const tier = unitInfo.Tier;
-      rank.classList.value = "size-8 bg-center bg-contain bg-no-repeat -mx-1\\.5";
+      rank.classList.value = "size-8 bg-center bg-contain bg-no-repeat -mx-1\\.25";
       const chevrons = `url(fs://game/bz-army-trix/icons/bz-chevrons-${tier}.png)`;
       const yrem = GlobalScaling.pixelsToRem((tier - 3) * 4);
       rank.style.filter = "saturate(0)";
