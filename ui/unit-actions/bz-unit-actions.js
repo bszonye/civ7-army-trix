@@ -44,6 +44,16 @@ class bzUnitActions {
     c.proto.updateShelf = function() {
       this.bzArmyTrix.updateShelf.call(this);
     }
+    // override component.currentState property
+    c.currentState = Object.getOwnPropertyDescriptor(c.proto, "currentState");
+    const currentState = {
+      ...c.currentState,
+      set(value) {
+        c.currentState.set.apply(this, [value]);
+        this.bzArmyTrix.startQuickUnpack();
+      },
+    };
+    Object.defineProperty(c.proto, "currentState", currentState);
   }
   beforeAttach() { }
   afterAttach() { }
@@ -51,6 +61,12 @@ class bzUnitActions {
   afterDetach() { }
   afterInitialize() {
     this.component.Root.classList.add("bz-army-trix", "bz-unit-actions");
+  }
+  startQuickUnpack() {
+    if (this.component._currentState != 3) return;
+    const unpackAction = this.component.standardActions
+      .find(a => a.type == "UNITCOMMAND_REMOVE_FROM_ARMY");
+    if (unpackAction) this.component.onActionChosen(unpackAction);
   }
   afterCreateButtons(actions) {
     if (actions == this.hiddenActions) {
