@@ -30,9 +30,9 @@
 }
 .unit-actions__action-button:hover .bz-alert-flag, .unit-actions__action-button:focus .bz-alert-flag, .unit-actions__action-button.focused .bz-alert-flag, .unit-actions__action-button.pressed .bz-alert-flag, .unit-actions__action-button:hover .bz-sleep-flag, .unit-actions__action-button:focus .bz-sleep-flag, .unit-actions__action-button.focused .bz-sleep-flag, .unit-actions__action-button.pressed .bz-sleep-flag {
   background-color: #9f9b92;
+  filter: drop-shadow(0 -0.0566666667rem 0.2222222222rem #e5d2ac);
   transition-property: background-color, filter;
   transition-duration: 0.25s;
-  filter: drop-shadow(0 -0.0566666667rem 0.2222222222rem #e5d2ac);
 }
 
 .unit-actions__hidden-column-bg.triple-col {
