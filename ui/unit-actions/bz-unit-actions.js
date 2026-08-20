@@ -4,7 +4,15 @@ import { UnitActionsPanelModel } from '/base-standard/ui/unit-actions/unit-actio
 
 import { ComponentUtilities } from '/core/ui-next/utilities/component-utilities.js';
 ComponentUtilities.preloadImages(
+  // deselect button
   "blp:action_deselect.png",
+  // missionary toggle buttons
+  "blp:unitflag_missionary.png",
+  "blp:action_spreadreligion.png",
+  "blp:Action_Sleep.png",
+  "blp:Action_Wake.png",
+  "blp:action_showall.png",
+  // unit statistic labels
   "fs://game/Action_Attack.png",
   "fs://game/Action_Construct.png",
   "fs://game/Action_Defend.png",
@@ -27,23 +35,6 @@ class bzUnitActions {
     if (bzUnitActions.c) return;  // one-time initialization
     // patch PanelCityDetails methods & properties
     const c = bzUnitActions.c = { proto };
-    // extend component.onInitialize
-    c.onInitialize = c.proto.onInitialize;
-    c.proto.onInitialize = function() {
-      c.onInitialize.call(this);
-      this.bzArmyTrix.afterInitialize();
-    }
-    // patch component.createButtons to fix a bug
-    c.createButtons = c.proto.createButtons;
-    c.proto.createButtons = function(actions) {
-      c.createButtons.call(this, actions);
-      this.bzArmyTrix.afterCreateButtons.call(this, actions);
-    }
-    // replace component.updateShelf to fix a bug
-    c.updateShelf = c.proto.updateShelf;
-    c.proto.updateShelf = function() {
-      this.bzArmyTrix.updateShelf.call(this);
-    }
     // override component.currentState property
     c.currentState = Object.getOwnPropertyDescriptor(c.proto, "currentState");
     const currentState = {
@@ -54,13 +45,139 @@ class bzUnitActions {
       },
     };
     Object.defineProperty(c.proto, "currentState", currentState);
+    // extend component.onInitialize
+    c.onInitialize = c.proto.onInitialize;
+    c.proto.onInitialize = function() {
+      const crv = c.onInitialize.call(this);
+      const arv = this.bzArmyTrix.afterInitialize();
+      return crv ?? arv;
+    }
+    // extend component.realizeButtons
+    c.realizeButtons = c.proto.realizeButtons;
+    c.proto.realizeButtons = function(...args) {
+      const crv = c.realizeButtons.apply(this, args);
+      const arv = this.bzArmyTrix.afterRealizeButtons();
+      return crv ?? arv;
+    }
+    // extend component.getUnitActions
+    c.getUnitActions = c.proto.getUnitActions;
+    c.proto.getUnitActions = function(...args) {
+      const [unit] = args;
+      const crv = c.getUnitActions.apply(this, args);
+      const arv = this.bzArmyTrix.afterGetUnitActions(unit);
+      return crv ?? arv;
+    }
+    // patch component.createButtons to fix a bug
+    c.createButtons = c.proto.createButtons;
+    c.proto.createButtons = function(...args) {
+      const [actions] = args;
+      const crv = c.createButtons.apply(this, args);
+      const arv = this.bzArmyTrix.afterCreateButtons(actions);
+      return crv ?? arv;
+    }
+    // replace component.updateShelf to fix a bug
+    c.updateShelf = c.proto.updateShelf;
+    c.proto.updateShelf = function() {
+      this.bzArmyTrix.updateShelf.call(this);
+    }
   }
   beforeAttach() { }
   afterAttach() { }
   beforeDetach() { }
   afterDetach() { }
+  findButton(container, url) {
+    const buttons = [...container.querySelectorAll(".unit-actions__action-button")];
+    const icons = buttons.map(e => e.style.getPropertyValue("--button-icon"));
+    const index = icons.indexOf(`url("${url}")`);
+    return index == -1 ? null : buttons[index];
+  }
   afterInitialize() {
     this.component.Root.classList.add("bz-army-trix", "bz-unit-actions");
+  }
+  afterRealizeButtons() {
+    const buttons = this.component.hiddenContainer;
+    const missionaryButton = this.findButton(buttons, "blp:unitflag_missionary.png");
+    const alertFlag = (type) => {
+      const flag = document.createElement("div");
+      flag.classList.add(type);
+      return flag;
+    }
+    if (missionaryButton) {
+      missionaryButton.classList.add("bz-missionary-alert-button", "relative");
+      const flag = alertFlag("bz-missionary-alert-flag");
+      flag.classList.add("bz-sleep-flag");
+      missionaryButton.appendChild(flag);
+    }
+    const religionButton = this.findButton(buttons, "blp:action_spreadreligion.png");
+    if (religionButton) {
+      religionButton.classList.add("bz-religion-alert-button", "relative");
+      const flag = alertFlag("bz-religion-alert-flag");
+      flag.classList.add("bz-alert-flag");
+      religionButton.appendChild(flag);
+    }
+  }
+  afterGetUnitActions(unit) {
+    const actions = [];
+    if (!unit.isAutomated) actions.push(
+      {
+        // wake all units of the same formation class
+        name: "Wake All",  // TODO
+        icon: "blp:action_showall.png",  // TODO
+        type: "UNITOPERATION_BZ_WAKE_ALL",  // TODO
+        annotation: "",
+        active: true,  // TODO
+        requireConfirm: false,
+        confirmTitle: "",
+        confirmBody: "",
+        UICategory: 3,
+        priority: -1,
+        hotkeyId: "WakeAll",  // TODO
+        callback: (_location) => {
+          // TODO
+          console.warn(`TRIX WAKE`);
+          this.component.switchToDefault();
+        }
+      },
+    );
+    if (unit.Religion?.spreadCharges ?? 0) actions.push(
+      {
+        name: "Alert (Missionary Units)",  // TODO
+        icon: "blp:unitflag_missionary.png",  // TODO
+        type: "UNITOPERATION_BZ_ALERT_UNIT_MISSIONARY",  // TODO
+        annotation: "",
+        active: true,  // TODO
+        requireConfirm: false,
+        confirmTitle: "",
+        confirmBody: "",
+        UICategory: 3,
+        priority: -1,
+        hotkeyId: "AlertUnits",  // TODO
+        callback: (_location) => {
+          // TODO
+          console.warn(`TRIX ALERT (Missionary Units)`);
+          this.component.switchToDefault();
+        }
+      },
+      {
+        name: "Alert (Spread Religion)",  // TODO
+        icon: "blp:action_spreadreligion.png",  // TODO
+        type: "UNITOPERATION_BZ_ALERT_SPREAD_RELIGION",  // TODO
+        annotation: "",
+        active: true,  // TODO
+        requireConfirm: false,
+        confirmTitle: "",
+        confirmBody: "",
+        UICategory: 3,
+        priority: -1,
+        hotkeyId: "AlertSpreadReligion",  // TODO
+        callback: (_location) => {
+          // TODO
+          console.warn(`TRIX ALERT (Spread Religion)`);
+          this.component.switchToDefault();
+        }
+      },
+    );
+    this.component.actions.unshift(...actions);
   }
   startQuickUnpack() {
     if (this.component._currentState != 3) return;
@@ -69,27 +186,26 @@ class bzUnitActions {
     if (unpackAction) this.component.onActionChosen(unpackAction);
   }
   afterCreateButtons(actions) {
-    if (actions == this.hiddenActions) {
-      const container = this.hiddenContainer;
+    if (actions == this.component.hiddenActions) {
+      const buttons = this.component.hiddenContainer;
 
       // add Deselect button
-      const TODO = false;
-      if (TODO && container.children.length < 6) {
-        const buttons = [...container.querySelectorAll(".unit-actions__action-button")];
-        const icons = buttons.map(e => e.style.getPropertyValue("--button-icon"));
-        if (!icons.includes('url("blp:action_deselect.png")')) {
-          this.createDeselectUnitAction(container.children.length + 1);
+      const TODO = true;
+      if (TODO) {
+        if (!this.findButton(buttons, "blp:action_deselect.png")) {
+          this.component.createDeselectUnitAction(buttons.children.length + 1);
         }
       }
       // fix button alignment
-      container.classList.replace("flex-wrap", "flex-wrap-reverse");
+      buttons.classList.replace("flex-wrap", "flex-wrap-reverse");
       const vspacer = "mb-2";
       const hspacer = "ml-2";
-      const size = container.children.length;
+      const rows = UI.getViewExperience() == UIViewExperience.Mobile ? 2 : 3;
+      const size = buttons.children.length;
       for (let i = 0; i < size; ++i) {
-        const button = container.children[i];
-        button.classList.toggle(vspacer, (i + 1) % 3 != 0);
-        button.classList.toggle(hspacer, 3 <= i);
+        const button = buttons.children[i];
+        button.classList.toggle(vspacer, (i + 1) % rows != 0);
+        button.classList.toggle(hspacer, rows <= i);
       }
     }
   }
@@ -99,19 +215,29 @@ class bzUnitActions {
     } else {
       this.shelfButton.setAttribute("tabindex", "-1");
     }
-    const numActionsForDouble = UI.getViewExperience() == UIViewExperience.Mobile ? 3 : 4;
-    const isDouble = this.hiddenContainer.children.length >= numActionsForDouble;
+    const rows = UI.getViewExperience() == UIViewExperience.Mobile ? 2 : 3;
+    const columns = Math.ceil(this.hiddenContainer.children.length / rows);
+    console.warn(`TRIX ${this.hiddenContainer.children.length} ${rows} ${columns}`);
     this.Root.querySelector(".unit-actions__hidden-column-bg")?.classList.toggle(
       "no-col",
       !UnitActionsPanelModel.isShelfOpen
     );
     this.Root.querySelector(".unit-actions__hidden-column-bg")?.classList.toggle(
       "single-col",
-      UnitActionsPanelModel.isShelfOpen && !isDouble
+      UnitActionsPanelModel.isShelfOpen && columns < 2
     );
     this.Root.querySelector(".unit-actions__hidden-column-bg")?.classList.toggle(
       "double-col",
-      UnitActionsPanelModel.isShelfOpen && isDouble
+      UnitActionsPanelModel.isShelfOpen && columns == 2
+    );
+    this.shelfButton.classList.toggle("flip", UnitActionsPanelModel.isShelfOpen);
+    this.Root.querySelector(".unit-actions__hidden-column-bg")?.classList.toggle(
+      "triple-col",
+      UnitActionsPanelModel.isShelfOpen && columns == 3
+    );
+    this.Root.querySelector(".unit-actions__hidden-column-bg")?.classList.toggle(
+      "quad-col",
+      UnitActionsPanelModel.isShelfOpen && columns == 4
     );
     this.shelfButton.classList.toggle("flip", UnitActionsPanelModel.isShelfOpen);
   }

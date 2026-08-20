@@ -1,2 +1,62 @@
+.bz-unit-actions .bz-missionary-alert-button .unit-action-button__button-icon {
+  filter:  /* style missionary icon to match other buttons */
+   brightness(0.95)
+   drop-shadow(0 0.05556rem 0 #444)
+   drop-shadow(0 0.05556rem 0 #444);
+}
+.bz-alert-flag {
+  background-image: url(blp:Action_Wake.png);
+  /* TODO */
+  filter: fxs-color-tint(#e5d2ac) drop-shadow(0 0 0.1111111111rem black);
+}
+.bz-sleep-flag {
+  background-image: url(blp:Action_Sleep.png);
+  /* TODO */
+  filter: brightness(1.5) drop-shadow(0 0 0.1111111111rem black);
+}
+.bz-alert-flag,
+.bz-sleep-flag {
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: absolute;
+  /* TODO */
+  top: 40%;
+  bottom: -10%;
+  right: 15%;
+  left: 15%;
+}
+
+.unit-actions__hidden-column-bg.triple-col {
+  animation-name: drawer-slide-triple;
+  animation-duration: 0.125s;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+}
+.unit-actions__hidden-column-bg.quad-col {
+  animation-name: drawer-slide-quad;
+  animation-duration: 0.125s;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+@keyframes drawer-slide-triple {
+  15% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+    width: 10.5555555556rem;
+  }
+}
+@keyframes drawer-slide-quad {
+  15% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+    width: 13.7777777778rem;
+  }
+}
 
 /* vim:set sw=2 et: */

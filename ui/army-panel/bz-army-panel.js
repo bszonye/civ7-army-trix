@@ -23,14 +23,16 @@ class bzArmyPanel {
     const c = bzArmyPanel.c = { proto };
     // extend component.onInitialize
     c.onInitialize = c.proto.onInitialize;
-    c.proto.onInitialize = function() {
-      c.onInitialize.call(this);
-      this.bzArmyTrix.afterInitialize();
+    c.proto.onInitialize = function(...args) {
+      const crv = c.onInitialize.apply(this, args);
+      const arv = this.bzArmyTrix.afterInitialize();
+      return crv ?? arv;
     }
     // extend component.onInitialize
     c.createArmyUnitButton = c.proto.createArmyUnitButton;
-    c.proto.createArmyUnitButton = function(unitId) {
-      const button = c.createArmyUnitButton.call(this, unitId);
+    c.proto.createArmyUnitButton = function(...args) {
+      const [unitId] = args;
+      const button = c.createArmyUnitButton.apply(this, args);
       this.bzArmyTrix.afterCreateArmyUnitButton(unitId, button);
       return button;
     }
