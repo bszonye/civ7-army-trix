@@ -23,15 +23,16 @@
   background-color: #333640;
   border: 0.0555555556rem solid #8c7e62;
   border-radius: 50%;
-  filter: drop-shadow(0 0 0.1111111111rem black);
+  filter: drop-shadow(0 0.0566666667rem 0.1111111111rem black);
   width: 1.2222222222rem;
   height: 1.2222222222rem;
   bottom: -0.3333333333rem;
 }
 .unit-actions__action-button:hover .bz-alert-flag, .unit-actions__action-button:focus .bz-alert-flag, .unit-actions__action-button.focused .bz-alert-flag, .unit-actions__action-button.pressed .bz-alert-flag, .unit-actions__action-button:hover .bz-sleep-flag, .unit-actions__action-button:focus .bz-sleep-flag, .unit-actions__action-button.focused .bz-sleep-flag, .unit-actions__action-button.pressed .bz-sleep-flag {
   background-color: #9f9b92;
-  transition-property: background-color;
+  transition-property: background-color, filter;
   transition-duration: 0.25s;
+  filter: drop-shadow(0 -0.0566666667rem 0.2222222222rem #e5d2ac);
 }
 
 .unit-actions__hidden-column-bg.triple-col {
