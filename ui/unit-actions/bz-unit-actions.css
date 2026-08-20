@@ -1,3 +1,8 @@
+.bz-unit-actions .bz-missionary-alert-button .unit-action-button__button-icon,
+.bz-unit-actions .bz-religion-alert-button .unit-action-button__button-icon {
+  top: -0.1666666667rem;
+  left: 0;
+}
 .bz-unit-actions .bz-missionary-alert-button .unit-action-button__button-icon {
   filter:  /* style missionary icon to match other buttons */
    brightness(0.95)
@@ -6,25 +11,28 @@
 }
 .bz-alert-flag {
   background-image: url(blp:Action_Wake.png);
-  /* TODO */
-  filter: fxs-color-tint(#e5d2ac) drop-shadow(0 0 0.1111111111rem black);
 }
 .bz-sleep-flag {
   background-image: url(blp:Action_Sleep.png);
-  /* TODO */
-  filter: brightness(1.5) drop-shadow(0 0 0.1111111111rem black);
 }
 .bz-alert-flag,
 .bz-sleep-flag {
+  position: absolute;
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
-  position: absolute;
-  /* TODO */
-  top: 40%;
-  bottom: -10%;
-  right: 15%;
-  left: 15%;
+  background-color: #333640;
+  border: 0.0555555556rem solid #e5e5e5;
+  border-radius: 50%;
+  filter: drop-shadow(0 0 0.1111111111rem black);
+  width: 1.2222222222rem;
+  height: 1.2222222222rem;
+  bottom: -0.3333333333rem;
+}
+.unit-actions__action-button:hover .bz-alert-flag, .unit-actions__action-button:focus .bz-alert-flag, .unit-actions__action-button.focused .bz-alert-flag, .unit-actions__action-button.pressed .bz-alert-flag, .unit-actions__action-button:hover .bz-sleep-flag, .unit-actions__action-button:focus .bz-sleep-flag, .unit-actions__action-button.focused .bz-sleep-flag, .unit-actions__action-button.pressed .bz-sleep-flag {
+  background-color: #818181;
+  transition-property: background-color;
+  transition-duration: 0.25s;
 }
 
 .unit-actions__hidden-column-bg.triple-col {
