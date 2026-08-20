@@ -93,26 +93,75 @@ class bzUnitActions {
     return index == -1 ? null : buttons[index];
   }
   filterUnitType(unit) {
+    // get all units of the same type (or same domain, for military)
     const player = Players.get(unit.owner);
-    const info = GameInfo.Units.lookup(unit.type);
+    const type = unit.type;
+    const info = GameInfo.Units.lookup(type);
     if (info.CoreClass != "CORE_CLASS_MILITARY") {
-      return player.Units.getUnits().filter(u => u.type == unit.type);
+      return player.Units.getUnits().filter(u => u.type == type);
     }
     const fclass = info.FormationClass;
     return player.Units.getUnits().filter(u => {
-      if (u.type == unit.type) return true;
+      if (u.type == type) return true;
       const info = GameInfo.Units.lookup(u.type);
       if (info.FormationClass == fclass) return true;
     });
   }
-  filterWakeType(unit) {
-    // get all units of the same type with a Wake command ready.
-    return this.filterUnitType(unit).filter(u => Game.UnitCommands?.canStart(
+  filterWakeableMissionaries(player) {
+    player ??= Players.get(GameContext.localPlayerID);
+    const units = player.Units.getUnits().filter(u => u.Religion?.spreadCharges ?? 0);
+    return this.filterWakeableUnits(units);
+  }
+  filterWakeableUnits(units) {
+    // get all units of the same type with a Wake command ready
+    return units.filter(u => Game.UnitCommands?.canStart(
       u.id,
       "UNITCOMMAND_WAKE",
       { X: -9999, Y: -9999 },
       false
     ).Success);
+  }
+  wakeUnitsForMissionary(units) {
+    units ??= this.filterWakeableMissionaries();
+    units = units.filter(u => {
+      const cityID = GameplayMap.getOwningCityFromXY(u.location.x, u.location.y);
+      if (!cityID) return false;
+      const city = Cities.get(cityID);
+      if (!city) return false;
+      const plots = city.getPurchasedPlots();
+      for (const plot of plots) {
+        const loc = GameplayMap.getLocationFromIndex(plot);
+        const plotUnits = MapUnits.getUnits(loc.x, loc.y);
+        for (const id of plotUnits) {
+          const pu = Units.get(id);
+          if (pu.owner == u.owner) continue;
+          if (pu.Religion?.spreadCharges ?? 0) return true;
+        }
+      }
+      return false;
+    });
+    this.wakeUnits(units);
+  }
+  wakeUnitsForReligion(units) {
+    units ??= this.filterWakeableMissionaries();
+    units = units.filter(u => {
+      const cityID = GameplayMap.getOwningCityFromXY(u.location.x, u.location.y);
+      if (!cityID) return false;
+      const city = Cities.get(cityID);
+      if (!city?.Religion) return false;
+      const cityReligion = city.Religion?.majorityReligion ?? -1;
+      const player = Players.get(u.owner);
+      const playerReligion = player.Religion?.getReligionType();
+      return cityReligion != playerReligion;
+    });
+    this.wakeUnits(units);
+  }
+  wakeUnits(units) {
+    // wake a list of units
+    const parameters = { X: -9999, Y: -9999 };
+    for (const u of units) {
+      Game.UnitCommands?.sendRequest(u.id, "UNITCOMMAND_WAKE", parameters);
+    }
   }
   afterInitialize() {
     this.component.Root.classList.add("bz-army-trix", "bz-unit-actions");
@@ -140,8 +189,9 @@ class bzUnitActions {
     }
   }
   afterGetUnitActions(unit) {
+    const units = this.filterUnitType(unit);
     const actions = [];
-    if (!unit.isAutomated && this.filterWakeType(unit).length) actions.push(
+    if (!unit.isAutomated && this.filterWakeableUnits(units).length) actions.push(
       {
         // wake all units of the same formation class
         name: "Wake All",  // TODO
@@ -155,16 +205,13 @@ class bzUnitActions {
         UICategory: 3,
         priority: -1,
         hotkeyId: "bzWakeAll",
-        callback: (location) => {
-          const parameters = location ?
-            { X: location.x, Y: location.y } :
-            { X: -9999, Y: -9999 };
-          const units = this.filterWakeType(unit);
-          for (const u of units) {
-            Game.UnitCommands?.sendRequest(u.id, "UNITCOMMAND_WAKE", parameters);
-          }
-          Audio.playSound(Audio.getSoundTag("data-audio-cancel-action", "interact-unit"));
-          this.component.switchToDefault();
+        callback: (_location) => {
+          this.wakeUnits(this.filterWakeableUnits(units));
+          UI.sendAudioEvent(Audio.getSoundTag("data-audio-cancel-action", "interact-unit"));
+          delayByFrame(() => {
+            this.component.realizeButtons();
+            this.component.updateFocusGate.call(`getUnitActions-bz-wake-all`);
+          }, 5);
         }
       },
     );
@@ -182,9 +229,14 @@ class bzUnitActions {
         priority: -1,
         hotkeyId: "bzAlertMissionary",
         callback: (_location) => {
-          // TODO
+          // TODO: toggle
+          this.wakeUnitsForMissionary();
           console.warn(`TRIX ALERT (Missionary Units)`);
-          this.component.switchToDefault();
+          UI.sendAudioEvent(Audio.getSoundTag("data-audio-ability-cancel-action", "interact-unit"));
+          delayByFrame(() => {
+            this.component.realizeButtons();
+            this.component.updateFocusGate.call(`getUnitActions-bz-wake-all`);
+          }, 5);
         }
       },
       {
@@ -200,9 +252,14 @@ class bzUnitActions {
         priority: -1,
         hotkeyId: "bzAlertReligion",
         callback: (_location) => {
-          // TODO
+          // TODO: toggle
+          this.wakeUnitsForReligion();
           console.warn(`TRIX ALERT (Spread Religion)`);
-          this.component.switchToDefault();
+          UI.sendAudioEvent(Audio.getSoundTag("data-audio-ability-cancel-action", "interact-unit"));
+          delayByFrame(() => {
+            this.component.realizeButtons();
+            this.component.updateFocusGate.call(`getUnitActions-bz-wake-all`);
+          }, 5);
         }
       },
     );
