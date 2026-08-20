@@ -1,3 +1,4 @@
+import { Audio } from '/core/ui/audio-base/audio-support.js';
 import { InterfaceMode } from '/core/ui/interface-modes/interface-modes.js';
 import CommanderInteract from '/base-standard/ui/commander-interact/model-commander-interact.js';
 import { UnitActionsPanelModel } from '/base-standard/ui/unit-actions/unit-actions.js';
@@ -91,6 +92,28 @@ class bzUnitActions {
     const index = icons.indexOf(`url("${url}")`);
     return index == -1 ? null : buttons[index];
   }
+  filterUnitType(unit) {
+    const player = Players.get(unit.owner);
+    const info = GameInfo.Units.lookup(unit.type);
+    if (info.CoreClass != "CORE_CLASS_MILITARY") {
+      return player.Units.getUnits().filter(u => u.type == unit.type);
+    }
+    const fclass = info.FormationClass;
+    return player.Units.getUnits().filter(u => {
+      if (u.type == unit.type) return true;
+      const info = GameInfo.Units.lookup(u.type);
+      if (info.FormationClass == fclass) return true;
+    });
+  }
+  filterWakeType(unit) {
+    // get all units of the same type with a Wake command ready.
+    return this.filterUnitType(unit).filter(u => Game.UnitCommands?.canStart(
+      u.id,
+      "UNITCOMMAND_WAKE",
+      { X: -9999, Y: -9999 },
+      false
+    ).Success);
+  }
   afterInitialize() {
     this.component.Root.classList.add("bz-army-trix", "bz-unit-actions");
   }
@@ -118,23 +141,29 @@ class bzUnitActions {
   }
   afterGetUnitActions(unit) {
     const actions = [];
-    if (!unit.isAutomated) actions.push(
+    if (!unit.isAutomated && this.filterWakeType(unit).length) actions.push(
       {
         // wake all units of the same formation class
         name: "Wake All",  // TODO
-        icon: "blp:action_showall.png",  // TODO
-        type: "UNITOPERATION_BZ_WAKE_ALL",  // TODO
+        icon: "blp:action_showall.png",
+        type: "UNITOPERATION_BZ_WAKE_ALL",
         annotation: "",
-        active: true,  // TODO
+        active: true,
         requireConfirm: false,
         confirmTitle: "",
         confirmBody: "",
         UICategory: 3,
         priority: -1,
-        hotkeyId: "WakeAll",  // TODO
-        callback: (_location) => {
-          // TODO
-          console.warn(`TRIX WAKE`);
+        hotkeyId: "bzWakeAll",
+        callback: (location) => {
+          const parameters = location ?
+            { X: location.x, Y: location.y } :
+            { X: -9999, Y: -9999 };
+          const units = this.filterWakeType(unit);
+          for (const u of units) {
+            Game.UnitCommands?.sendRequest(u.id, "UNITCOMMAND_WAKE", parameters);
+          }
+          Audio.playSound(Audio.getSoundTag("data-audio-cancel-action", "interact-unit"));
           this.component.switchToDefault();
         }
       },
@@ -142,8 +171,8 @@ class bzUnitActions {
     if (unit.Religion?.spreadCharges ?? 0) actions.push(
       {
         name: "Alert (Missionary Units)",  // TODO
-        icon: "blp:unitflag_missionary.png",  // TODO
-        type: "UNITOPERATION_BZ_ALERT_UNIT_MISSIONARY",  // TODO
+        icon: "blp:unitflag_missionary.png",
+        type: "UNITOPERATION_BZ_ALERT_MISSIONARY",
         annotation: "",
         active: true,  // TODO
         requireConfirm: false,
@@ -151,7 +180,7 @@ class bzUnitActions {
         confirmBody: "",
         UICategory: 3,
         priority: -1,
-        hotkeyId: "AlertUnits",  // TODO
+        hotkeyId: "bzAlertMissionary",
         callback: (_location) => {
           // TODO
           console.warn(`TRIX ALERT (Missionary Units)`);
@@ -160,8 +189,8 @@ class bzUnitActions {
       },
       {
         name: "Alert (Spread Religion)",  // TODO
-        icon: "blp:action_spreadreligion.png",  // TODO
-        type: "UNITOPERATION_BZ_ALERT_SPREAD_RELIGION",  // TODO
+        icon: "blp:action_spreadreligion.png",
+        type: "UNITOPERATION_BZ_ALERT_RELIGION",
         annotation: "",
         active: true,  // TODO
         requireConfirm: false,
@@ -169,7 +198,7 @@ class bzUnitActions {
         confirmBody: "",
         UICategory: 3,
         priority: -1,
-        hotkeyId: "AlertSpreadReligion",  // TODO
+        hotkeyId: "bzAlertReligion",
         callback: (_location) => {
           // TODO
           console.warn(`TRIX ALERT (Spread Religion)`);
@@ -190,7 +219,7 @@ class bzUnitActions {
       const buttons = this.component.hiddenContainer;
 
       // add Deselect button
-      const TODO = true;
+      const TODO = false;
       if (TODO) {
         if (!this.findButton(buttons, "blp:action_deselect.png")) {
           this.component.createDeselectUnitAction(buttons.children.length + 1);
@@ -217,7 +246,6 @@ class bzUnitActions {
     }
     const rows = UI.getViewExperience() == UIViewExperience.Mobile ? 2 : 3;
     const columns = Math.ceil(this.hiddenContainer.children.length / rows);
-    console.warn(`TRIX ${this.hiddenContainer.children.length} ${rows} ${columns}`);
     this.Root.querySelector(".unit-actions__hidden-column-bg")?.classList.toggle(
       "no-col",
       !UnitActionsPanelModel.isShelfOpen
