@@ -27,14 +27,12 @@ class bzArmyTrixDataSingleton {
     }
     get(key) {
         const value = this.data.get(key);
-        console.warn(`TRIX GET ${key} = ${JSON.stringify(value)}`);
         return value;
     }
     set(key, value) {
         const store = this.currentCatalog.getObject(CATALOG_OBJECT_NAME);
         store.write(key, value);
         this.data.set(key, value);
-        console.warn(`TRIX WRITE ${key} = ${JSON.stringify(value)}`);
     }
     loadData() {
         const store = this.currentCatalog.getObject(CATALOG_OBJECT_NAME);
@@ -42,7 +40,6 @@ class bzArmyTrixDataSingleton {
         for (const key of store.getKeys()) {
             const value = store.read(key);
             this.data.set(key, value);
-            console.warn(`TRIX READ ${key} = ${JSON.stringify(value)}`);
         }
     }
     onLocalPlayerChanged() {

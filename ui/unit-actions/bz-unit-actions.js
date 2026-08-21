@@ -168,7 +168,6 @@ class bzUnitActions {
   onLocalPlayerTurnBegin() {
     const autoAlert = (type, wake) => {
       const value = bzArmyTrixData.get(type) ?? true;
-      console.warn(`TRIX ALERT ${type} = ${value}`);
       if (value) wake();
     }
     autoAlert("bz-alert-missionary", this.wakeUnitsForMissionary.bind(this));
@@ -224,7 +223,6 @@ class bzUnitActions {
     const toggleAlert = (type, wake) => {
       // toggle value
       const newValue = !(bzArmyTrixData.get(type) ?? true);
-      console.warn(`TRIX ALERT ${type} => ${newValue}`);
       bzArmyTrixData.set(type, newValue);
       // if toggle was set, wake units
       if (newValue) wake();
