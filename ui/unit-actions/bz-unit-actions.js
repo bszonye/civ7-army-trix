@@ -2,6 +2,7 @@ import { Audio } from '/core/ui/audio-base/audio-support.js';
 import { InterfaceMode } from '/core/ui/interface-modes/interface-modes.js';
 import CommanderInteract from '/base-standard/ui/commander-interact/model-commander-interact.js';
 import { UnitActionsPanelModel } from '/base-standard/ui/unit-actions/unit-actions.js';
+import bzArmyTrixData from '/bz-army-trix/ui/bz-data/bz-army-trix-data.js';
 
 import { ComponentUtilities } from '/core/ui-next/utilities/component-utilities.js';
 ComponentUtilities.preloadImages(
@@ -168,25 +169,20 @@ class bzUnitActions {
   }
   afterRealizeButtons() {
     const buttons = this.component.hiddenContainer;
-    const missionaryButton = this.findButton(buttons, "blp:unitflag_missionary.png");
-    const alertFlag = (type) => {
-      const flag = document.createElement("div");
-      flag.classList.add(type);
-      return flag;
-    }
-    if (missionaryButton) {
-      missionaryButton.classList.add("bz-missionary-alert-button", "relative");
-      const flag = alertFlag("bz-missionary-alert-flag");
-      flag.classList.add("bz-sleep-flag");
-      missionaryButton.appendChild(flag);
-    }
-    const religionButton = this.findButton(buttons, "blp:action_spreadreligion.png");
-    if (religionButton) {
-      religionButton.classList.add("bz-religion-alert-button", "relative");
-      const flag = alertFlag("bz-religion-alert-flag");
-      flag.classList.add("bz-alert-flag");
-      religionButton.appendChild(flag);
-    }
+    const realizeFlag = (type, icon) => {
+      const button = this.findButton(buttons, icon);
+      if (button) {
+        const value = bzArmyTrixData.get(type) ?? true;
+        button.classList.add(`${type}-button`, "relative");
+        const flag = document.createElement("div");
+        flag.classList.add(`${type}-flag`);
+        flag.classList.toggle("bz-alert-flag", value);
+        flag.classList.toggle("bz-sleep-flag", !value);
+        button.appendChild(flag);
+      }
+    };
+    realizeFlag("bz-missionary-alert", "blp:unitflag_missionary.png");
+    realizeFlag("bz-religion-alert", "blp:action_spreadreligion.png");
   }
   afterGetUnitActions(unit) {
     const units = this.filterUnitType(unit);

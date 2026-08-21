@@ -50,6 +50,7 @@
                 </ImportFiles>
                 <UIScripts>
                     <Item>ui/army-panel/bz-army-panel.js</Item>
+                    <Item>ui/bz-data/bz-army-trix-data.js</Item>
                     <Item>ui/input/bz-hotkey-manager.js</Item>
                     <Item>ui/options/editors/bz-editor-keyboard-mapping.js</Item>
                     <Item>ui/unit-actions/bz-unit-actions.js</Item>
