@@ -241,7 +241,7 @@ class bzUnitActions {
         icon: "blp:unitflag_missionary.png",
         type: "UNITOPERATION_BZ_ALERT_MISSIONARY",
         annotation: "",
-        active: true,  // TODO
+        active: true,
         requireConfirm: false,
         confirmTitle: "",
         confirmBody: "",
@@ -260,7 +260,7 @@ class bzUnitActions {
         icon: "blp:action_spreadreligion.png",
         type: "UNITOPERATION_BZ_ALERT_RELIGION",
         annotation: "",
-        active: true,  // TODO
+        active: true,
         requireConfirm: false,
         confirmTitle: "",
         confirmBody: "",
