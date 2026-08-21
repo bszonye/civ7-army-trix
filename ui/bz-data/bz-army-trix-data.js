@@ -26,7 +26,9 @@ class bzArmyTrixDataSingleton {
         engine.on("LocalPlayerChanged", this.onLocalPlayerChanged, this);
     }
     get(key) {
-        return this.data.get(key);
+        const value = this.data.get(key);
+        console.warn(`TRIX GET ${key} = ${JSON.stringify(value)}`);
+        return value;
     }
     set(key, value) {
         const store = this.currentCatalog.getObject(CATALOG_OBJECT_NAME);

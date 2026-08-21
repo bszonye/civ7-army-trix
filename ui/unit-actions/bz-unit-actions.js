@@ -32,6 +32,7 @@ class bzUnitActions {
     this.component = component;
     component.bzArmyTrix = this;
     this.patchPrototype(Object.getPrototypeOf(component));
+    engine.on("LocalPlayerTurnBegin", this.onLocalPlayerTurnBegin, this);
   }
   patchPrototype(proto) {
     if (bzUnitActions.c) return;  // one-time initialization
@@ -164,6 +165,15 @@ class bzUnitActions {
       Game.UnitCommands?.sendRequest(u.id, "UNITCOMMAND_WAKE", parameters);
     }
   }
+  onLocalPlayerTurnBegin() {
+    const autoAlert = (type, wake) => {
+      const value = bzArmyTrixData.get(type) ?? true;
+      console.warn(`TRIX ALERT ${type} = ${value}`);
+      if (value) wake();
+    }
+    autoAlert("bz-alert-missionary", this.wakeUnitsForMissionary.bind(this));
+    autoAlert("bz-alert-religion", this.wakeUnitsForReligion.bind(this));
+  }
   afterInitialize() {
     this.component.Root.classList.add("bz-army-trix", "bz-unit-actions");
   }
@@ -181,8 +191,8 @@ class bzUnitActions {
         button.appendChild(flag);
       }
     };
-    realizeFlag("bz-missionary-alert", "blp:unitflag_missionary.png");
-    realizeFlag("bz-religion-alert", "blp:action_spreadreligion.png");
+    realizeFlag("bz-alert-missionary", "blp:unitflag_missionary.png");
+    realizeFlag("bz-alert-religion", "blp:action_spreadreligion.png");
   }
   afterGetUnitActions(unit) {
     const units = this.filterUnitType(unit);
@@ -211,6 +221,22 @@ class bzUnitActions {
         }
       },
     );
+    const toggleAlert = (type, wake) => {
+      // toggle value
+      const newValue = !(bzArmyTrixData.get(type) ?? true);
+      console.warn(`TRIX ALERT ${type} => ${newValue}`);
+      bzArmyTrixData.set(type, newValue);
+      // if toggle was set, wake units
+      if (newValue) wake();
+      UI.sendAudioEvent(
+        Audio.getSoundTag("data-audio-ability-cancel-action", "interact-unit")
+      );
+      // reload panel
+      delayByFrame(() => {
+        this.component.realizeButtons();
+        this.component.updateFocusGate.call(`getUnitActions-${type}`);
+      }, 5);
+    }
     if (unit.Religion?.spreadCharges ?? 0) actions.push(
       {
         name: "Alert (Missionary Units)",  // TODO
@@ -225,14 +251,10 @@ class bzUnitActions {
         priority: -1,
         hotkeyId: "bzAlertMissionary",
         callback: (_location) => {
-          // TODO: toggle
-          this.wakeUnitsForMissionary();
-          console.warn(`TRIX ALERT (Missionary Units)`);
-          UI.sendAudioEvent(Audio.getSoundTag("data-audio-ability-cancel-action", "interact-unit"));
-          delayByFrame(() => {
-            this.component.realizeButtons();
-            this.component.updateFocusGate.call(`getUnitActions-bz-wake-all`);
-          }, 5);
+          toggleAlert(
+            "bz-alert-missionary",
+            this.wakeUnitsForMissionary.bind(this)
+          );
         }
       },
       {
@@ -248,14 +270,10 @@ class bzUnitActions {
         priority: -1,
         hotkeyId: "bzAlertReligion",
         callback: (_location) => {
-          // TODO: toggle
-          this.wakeUnitsForReligion();
-          console.warn(`TRIX ALERT (Spread Religion)`);
-          UI.sendAudioEvent(Audio.getSoundTag("data-audio-ability-cancel-action", "interact-unit"));
-          delayByFrame(() => {
-            this.component.realizeButtons();
-            this.component.updateFocusGate.call(`getUnitActions-bz-wake-all`);
-          }, 5);
+          toggleAlert(
+            "bz-alert-religion",
+            this.wakeUnitsForReligion.bind(this)
+          );
         }
       },
     );
