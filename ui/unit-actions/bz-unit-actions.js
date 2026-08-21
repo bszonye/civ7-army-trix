@@ -196,10 +196,18 @@ class bzUnitActions {
   afterGetUnitActions(unit) {
     const units = this.filterUnitType(unit);
     const actions = [];
+    const actionName = (op) => {
+      const name = `LOC_${op}_NAME`;
+      const desc = `LOC_${op}_DESCRIPTION`;
+      const text =
+        `[STYLE:unit-action__tooltip-title]${Locale.compose(name)}[/STYLE]` +
+        `[n]${Locale.compose(desc)}`;
+      return text;
+    };
     if (!unit.isAutomated && this.filterWakeableUnits(units).length) actions.push(
       {
         // wake all units of the same formation class
-        name: "Wake All",  // TODO
+        name: actionName("UNITOPERATION_BZ_WAKE_ALL"),
         icon: "blp:action_showall.png",
         type: "UNITOPERATION_BZ_WAKE_ALL",
         annotation: "",
@@ -234,10 +242,10 @@ class bzUnitActions {
         this.component.realizeButtons();
         this.component.updateFocusGate.call(`getUnitActions-${type}`);
       }, 5);
-    }
+    };
     if (unit.Religion?.spreadCharges ?? 0) actions.push(
       {
-        name: "Alert (Missionary Units)",  // TODO
+        name: actionName("UNITOPERATION_BZ_ALERT_MISSIONARY"),
         icon: "blp:unitflag_missionary.png",
         type: "UNITOPERATION_BZ_ALERT_MISSIONARY",
         annotation: "",
@@ -256,7 +264,7 @@ class bzUnitActions {
         }
       },
       {
-        name: "Alert (Spread Religion)",  // TODO
+        name: actionName("UNITOPERATION_BZ_ALERT_RELIGION"),
         icon: "blp:action_spreadreligion.png",
         type: "UNITOPERATION_BZ_ALERT_RELIGION",
         annotation: "",
