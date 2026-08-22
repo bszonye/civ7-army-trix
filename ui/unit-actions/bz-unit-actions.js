@@ -289,7 +289,7 @@ class bzUnitActions {
     if (this.component._currentState != 3) return;
     const unpackAction = this.component.standardActions
       .find(a => a.type == "UNITCOMMAND_REMOVE_FROM_ARMY");
-    if (unpackAction) this.component.onActionChosen(unpackAction);
+    if (unpackAction?.active) this.component.onActionChosen(unpackAction);
   }
   afterCreateButtons(actions) {
     if (actions == this.component.hiddenActions) {
