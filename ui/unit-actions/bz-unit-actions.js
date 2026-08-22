@@ -78,6 +78,14 @@ class bzUnitActions {
       const arv = this.bzArmyTrix.afterCreateButtons(actions);
       return crv ?? arv;
     }
+    // extend component.setButtonData
+    c.setButtonData = c.proto.setButtonData;
+    c.proto.setButtonData = function(...args) {
+      const [button, action] = args;
+      const crv = c.setButtonData.apply(this, args);
+      const arv = this.bzArmyTrix.afterSetButtonData(button, action);
+      return crv ?? arv;
+    }
     // replace component.updateShelf to fix a bug
     c.updateShelf = c.proto.updateShelf;
     c.proto.updateShelf = function() {
@@ -88,11 +96,14 @@ class bzUnitActions {
   afterAttach() { }
   beforeDetach() { }
   afterDetach() { }
-  findButton(container, url) {
+  findButton(container, action) {
+    const url = `url("${action}")`;
     const buttons = [...container.querySelectorAll(".unit-actions__action-button")];
-    const icons = buttons.map(e => e.style.getPropertyValue("--button-icon"));
-    const index = icons.indexOf(`url("${url}")`);
-    return index == -1 ? null : buttons[index];
+    for (const button of buttons) {
+      if (button.style.getPropertyValue("--button-icon") == url) return button;
+      if (button.getAttribute("bz-action-type") == action) return button;
+    }
+    return null;
   }
   filterUnitType(unit) {
     // get all units of the same type (or same domain, for military)
@@ -177,21 +188,30 @@ class bzUnitActions {
     this.component.Root.classList.add("bz-army-trix", "bz-unit-actions");
   }
   afterRealizeButtons() {
+    const actionName = (action, value) => {
+      const name = `LOC_${action}_NAME`;
+      const desc = `LOC_${action}_${value}_DESCRIPTION`.toUpperCase();
+      const text =
+        `[STYLE:unit-action__tooltip-title]${Locale.compose(name)}[/STYLE]` +
+        `[n]${Locale.compose(desc)}`;
+      return text;
+    };
     const buttons = this.component.hiddenContainer;
-    const realizeFlag = (type, icon) => {
-      const button = this.findButton(buttons, icon);
+    const realizeFlag = (type, action) => {
+      const button = this.findButton(buttons, action);
       if (button) {
         const value = bzArmyTrixData.get(type) ?? true;
         button.classList.add(`${type}-button`, "relative");
         const flag = document.createElement("div");
-        flag.classList.add(`${type}-flag`);
+        flag.classList.add(`${type}-flag`, "pointer-events-none");
         flag.classList.toggle("bz-alert-flag", value);
         flag.classList.toggle("bz-sleep-flag", !value);
+        button.setAttribute("data-tooltip-content", actionName(action, value));
         button.appendChild(flag);
       }
     };
-    realizeFlag("bz-alert-missionary", "blp:unitflag_missionary.png");
-    realizeFlag("bz-alert-religion", "blp:action_spreadreligion.png");
+    realizeFlag("bz-alert-missionary", "UNITOPERATION_BZ_ALERT_MISSIONARY");
+    realizeFlag("bz-alert-religion", "UNITOPERATION_BZ_ALERT_RELIGION");
   }
   afterGetUnitActions(unit) {
     const units = this.filterUnitType(unit);
@@ -314,6 +334,9 @@ class bzUnitActions {
         button.classList.toggle(hspacer, rows <= i);
       }
     }
+  }
+  afterSetButtonData(button, action) {
+    if (action && button) button.setAttribute("bz-action-type", action.type);
   }
   updateShelf() {
     if (UnitActionsPanelModel.isShelfOpen) {
