@@ -32,10 +32,10 @@
             <Text>Optionally wake up sleeping units in settlements that are not following your religion, or that are converted to another religion.</Text>
         </Replace>
         <Replace Tag="LOC_UNITOPERATION_BZ_ALERT_RELIGION_FALSE_DESCRIPTION">
-            <Text>Optionally wake up sleeping units in settlements that are not following your religion, or that are converted to another religion.[n][STYLE:unit-action__tooltip-additional-desc]Units [b]sleep[/b] and ignore settlement religion.[/STYLE]</Text>
+            <Text>Optionally wake up sleeping units in settlements that are not following your religion, or that are converted to another religion.[n][STYLE:unit-action__tooltip-additional-desc]Units [b]sleep[/b] and ignore religion.[/STYLE]</Text>
         </Replace>
         <Replace Tag="LOC_UNITOPERATION_BZ_ALERT_RELIGION_TRUE_DESCRIPTION">
-            <Text>Optionally wake up sleeping units in settlements that are not following your religion, or that are converted to another religion.[n][STYLE:unit-action__tooltip-additional-desc]Units are [b]alert[/b] to settlement religion and wake up.[/STYLE]</Text>
+            <Text>Optionally wake up sleeping units in settlements that are not following your religion, or that are converted to another religion.[n][STYLE:unit-action__tooltip-additional-desc]Units are [b]alert[/b] to religion and wake up.[/STYLE]</Text>
         </Replace>
     </EnglishText>
 </Database>
