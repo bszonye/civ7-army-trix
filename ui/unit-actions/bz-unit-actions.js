@@ -232,11 +232,15 @@ class bzUnitActions {
   }
   afterGetUnitActions(unit) {
     const units = this.filterUnitType(unit);
+    const info = GameInfo.Units.lookup(unit.type);
     const actions = [];
     if (!unit.isAutomated && this.filterWakeableUnits(units).length) actions.push(
       {
         // wake all units of the same formation class
-        name: this.actionName("UNITOPERATION_BZ_WAKE_ALL"),
+        name: this.actionName(
+          "UNITOPERATION_BZ_WAKE_ALL",
+          info.CoreClass == "CORE_CLASS_MILITARY" ? info.Domain : null
+        ),
         icon: "blp:action_showall.png",
         type: "UNITOPERATION_BZ_WAKE_ALL",
         annotation: "",
@@ -249,11 +253,31 @@ class bzUnitActions {
         hotkeyId: "bzWakeAll",
         callback: (_location) => {
           this.wakeUnits(this.filterWakeableUnits(units));
-          UI.sendAudioEvent(Audio.getSoundTag("data-audio-cancel-action", "interact-unit"));
-          delayByFrame(() => {
+          const frameLimit = 30;
+          let frames = 0;
+          new Promise((resolve, reject) => {
+            const checkWakeStatus = () => {
+              ++frames;
+              requestAnimationFrame(() => {
+                if (this.filterWakeableUnits(units).length == 0) {
+                  console.warn(`TRIX Wake All took ${frames} frames`);
+                  resolve();
+                } else if (frameLimit <= frames) {
+                  console.error(`Could not Wake All within ${frameLimit} frame(s)`);
+                  reject();
+                } else {
+                  checkWakeStatus();
+                }
+              });
+            };
+            checkWakeStatus();
+          }).then(() => {
             this.component.realizeButtons();
             this.component.updateFocusGate.call(`getUnitActions-bz-wake-all`);
-          }, 5);
+          }).catch(() => {
+            this.component.switchToDefault();
+          });
+          UI.sendAudioEvent(Audio.getSoundTag("data-audio-cancel-action", "interact-unit"));
         }
       },
     );

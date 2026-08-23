@@ -11,7 +11,16 @@
             <Text>Wake All</Text>
         </Replace>
         <Replace Tag="LOC_UNITOPERATION_BZ_WAKE_ALL_DESCRIPTION">
-            <Text>Wake up all units of the same type.[n]Military units also wake up other military units of the same domain (land, naval, air).</Text>
+            <Text>Wake up all units of the same type.</Text>
+        </Replace>
+        <Replace Tag="LOC_UNITOPERATION_BZ_WAKE_ALL_DOMAIN_LAND_DESCRIPTION">
+            <Text>Wake up all Land Military Units.</Text>
+        </Replace>
+        <Replace Tag="LOC_UNITOPERATION_BZ_WAKE_ALL_DOMAIN_SEA_DESCRIPTION">
+            <Text>Wake up all Naval Military Units.</Text>
+        </Replace>
+        <Replace Tag="LOC_UNITOPERATION_BZ_WAKE_ALL_DOMAIN_AIR_DESCRIPTION">
+            <Text>Wake up all Air Military Units.</Text>
         </Replace>
         <Replace Tag="LOC_UNITOPERATION_BZ_ALERT_MISSIONARY_NAME">
             <Text>Toggle Alert (Missionary Units)</Text>
