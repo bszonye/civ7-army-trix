@@ -17,10 +17,10 @@
             <Text>Wake up all Land Military Units.</Text>
         </Replace>
         <Replace Tag="LOC_UNITOPERATION_BZ_WAKE_ALL_DOMAIN_SEA_DESCRIPTION">
-            <Text>Wake up all Naval Military Units.</Text>
+            <Text>Wake up all Naval Units.</Text>
         </Replace>
         <Replace Tag="LOC_UNITOPERATION_BZ_WAKE_ALL_DOMAIN_AIR_DESCRIPTION">
-            <Text>Wake up all Air Military Units.</Text>
+            <Text>Wake up all Air Units.</Text>
         </Replace>
         <Replace Tag="LOC_UNITOPERATION_BZ_ALERT_MISSIONARY_NAME">
             <Text>Toggle Alert (Missionary Units)</Text>
