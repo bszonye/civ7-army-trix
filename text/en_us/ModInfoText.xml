@@ -5,7 +5,7 @@
             <Text>Army Trix</Text>
         </Row>
         <Row Tag="LOC_MOD_BZ_ARMY_TRIX_DESCRIPTION">
-            <Text>better commander tools</Text>
+            <Text>better unit command tools</Text>
         </Row>
     </EnglishText>
 </Database>
