@@ -260,7 +260,6 @@ class bzUnitActions {
               ++frames;
               requestAnimationFrame(() => {
                 if (this.filterWakeableUnits(units).length == 0) {
-                  console.warn(`TRIX Wake All took ${frames} frames`);
                   resolve();
                 } else if (frameLimit <= frames) {
                   console.error(`Could not Wake All within ${frameLimit} frame(s)`);
