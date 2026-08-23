@@ -187,15 +187,17 @@ class bzUnitActions {
   afterInitialize() {
     this.component.Root.classList.add("bz-army-trix", "bz-unit-actions");
   }
+  actionName(action, variant) {
+    const name = `LOC_${action}_NAME`;
+    const desc = variant != null ?
+      `LOC_${action}_${variant}_DESCRIPTION`.toUpperCase() :
+      `LOC_${action}_DESCRIPTION`.toUpperCase();
+    const text =
+      `[STYLE:unit-action__tooltip-title]${Locale.compose(name)}[/STYLE]` +
+      `[n]${Locale.compose(desc)}`;
+    return text;
+  }
   afterRealizeButtons() {
-    const actionName = (action, value) => {
-      const name = `LOC_${action}_NAME`;
-      const desc = `LOC_${action}_${value}_DESCRIPTION`.toUpperCase();
-      const text =
-        `[STYLE:unit-action__tooltip-title]${Locale.compose(name)}[/STYLE]` +
-        `[n]${Locale.compose(desc)}`;
-      return text;
-    };
     const buttons = this.component.hiddenContainer;
     const realizeFlag = (type, action) => {
       const button = this.findButton(buttons, action);
@@ -206,8 +208,23 @@ class bzUnitActions {
         flag.classList.add(`${type}-flag`, "pointer-events-none");
         flag.classList.toggle("bz-alert-flag", value);
         flag.classList.toggle("bz-sleep-flag", !value);
-        button.setAttribute("data-tooltip-content", actionName(action, value));
+        button.setAttribute("data-tooltip-content", this.actionName(action, value));
         button.appendChild(flag);
+        const sleep = value ? this.findButton(buttons, "UNITOPERATION_SLEEP") : null;
+        if (sleep) {
+          // also flag the Sleep button
+          sleep.classList.add("relative");
+          const name = Locale.compose("LOC_UNITOPERATION_SLEEP_NAME");
+          const desc = Locale.compose("LOC_UNITOPERATION_SLEEP_DESCRIPTION");
+          const note = Locale.compose("LOC_UNITOPERATION_SLEEP_BZ_ALERT_NOTE");
+          const tooltip =
+            `[STYLE:unit-action__tooltip-title]${name}[/STYLE][n]${desc}` +
+            `[n][STYLE:unit-action__tooltip-additional-desc]${note}[/STYLE]`;
+          sleep.setAttribute("data-tooltip-content", tooltip);
+          const flag = document.createElement("div");
+          flag.classList.add("bz-alert-flag", "pointer-events-none");
+          sleep.appendChild(flag);
+        }
       }
     };
     realizeFlag("bz-alert-missionary", "UNITOPERATION_BZ_ALERT_MISSIONARY");
@@ -216,18 +233,10 @@ class bzUnitActions {
   afterGetUnitActions(unit) {
     const units = this.filterUnitType(unit);
     const actions = [];
-    const actionName = (op) => {
-      const name = `LOC_${op}_NAME`;
-      const desc = `LOC_${op}_DESCRIPTION`;
-      const text =
-        `[STYLE:unit-action__tooltip-title]${Locale.compose(name)}[/STYLE]` +
-        `[n]${Locale.compose(desc)}`;
-      return text;
-    };
     if (!unit.isAutomated && this.filterWakeableUnits(units).length) actions.push(
       {
         // wake all units of the same formation class
-        name: actionName("UNITOPERATION_BZ_WAKE_ALL"),
+        name: this.actionName("UNITOPERATION_BZ_WAKE_ALL"),
         icon: "blp:action_showall.png",
         type: "UNITOPERATION_BZ_WAKE_ALL",
         annotation: "",
@@ -236,7 +245,7 @@ class bzUnitActions {
         confirmTitle: "",
         confirmBody: "",
         UICategory: 3,
-        priority: -1,
+        priority: 90,
         hotkeyId: "bzWakeAll",
         callback: (_location) => {
           this.wakeUnits(this.filterWakeableUnits(units));
@@ -265,7 +274,7 @@ class bzUnitActions {
     };
     if (unit.Religion?.spreadCharges ?? 0) actions.push(
       {
-        name: actionName("UNITOPERATION_BZ_ALERT_MISSIONARY"),
+        name: this.actionName("UNITOPERATION_BZ_ALERT_MISSIONARY"),
         icon: "blp:unitflag_missionary.png",
         type: "UNITOPERATION_BZ_ALERT_MISSIONARY",
         annotation: "",
@@ -274,7 +283,7 @@ class bzUnitActions {
         confirmTitle: "",
         confirmBody: "",
         UICategory: 3,
-        priority: -1,
+        priority: 80,
         hotkeyId: "bzAlertMissionary",
         callback: (_location) => {
           toggleAlert(
@@ -284,7 +293,7 @@ class bzUnitActions {
         }
       },
       {
-        name: actionName("UNITOPERATION_BZ_ALERT_RELIGION"),
+        name: this.actionName("UNITOPERATION_BZ_ALERT_RELIGION"),
         icon: "blp:action_spreadreligion.png",
         type: "UNITOPERATION_BZ_ALERT_RELIGION",
         annotation: "",
@@ -293,7 +302,7 @@ class bzUnitActions {
         confirmTitle: "",
         confirmBody: "",
         UICategory: 3,
-        priority: -1,
+        priority: 80,
         hotkeyId: "bzAlertReligion",
         callback: (_location) => {
           toggleAlert(
