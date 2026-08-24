@@ -19,10 +19,11 @@ and pick the unit you want.  new stat overlays include:
 - exact unit health for damaged units
 
 ## quick pack and unpack
-the Add to Commander action skips unit selection when there's only one
-commander in range, and the current unit remains selected after packing.
-selecting a packed unit automatically starts the Leave Commander action,
-so you can pack and redeploy a unit in just two clicks.
+the Add to Commander and Leave Commander actions leave the unit selected
+after packing or unpacking.  Add to Commander skips unit selection when
+there's only one commander in range, and the Leave Commander interface
+starts automatically after packing or selecting a unit, so you can pack
+and redeploy a unit in just two clicks.
 
 ## wake all
 the new Wake All action wakes up all units of the same type, canceling
