@@ -68,8 +68,7 @@ class bzArmyPanel {
     if (xp?.canPromote) {
       const promote = GameInfo.UnitCommands.lookup("UNITCOMMAND_PROMOTE");
       const canPromote = xp.getStoredCommendations || xp.getStoredPromotionPoints;
-      promo.classList.add("size-9");
-      promo.style.backgroundColor = "#00ccffaa";
+      promo.classList.add("size-9", "bz-promotion-ready");
       promo.style.backgroundImage = `url(${promote.Icon})`;
       promo.classList.toggle("invisible", !canPromote);
     } else {
@@ -77,8 +76,7 @@ class bzArmyPanel {
       const canUpgrade = Game.UnitCommands.canStart(
         unit.id, upgrade.CommandType, { X: -9999, Y: -9999 }, true
       ).Success;
-      promo.classList.add("size-6");
-      promo.style.backgroundColor = "#e5d2ac66";
+      promo.classList.add("size-6", "bz-upgrade-ready");
       promo.style.backgroundImage = `url(${upgrade.Icon})`;
       promo.classList.toggle("invisible", !canUpgrade);
     }

@@ -1,6 +1,12 @@
 .bz-army-panel .army-panel__action-button {
   background-color: transparent;
 }
+.bz-army-panel .bz-promotion-ready {
+  background-color: #0a91b6;
+}
+.bz-army-panel .bz-upgrade-ready {
+  background-color: #6c655b;
+}
 
 /* compatibility with sloth's action panel */
 .bz-army-panel .ap-mod-movement-badge,
