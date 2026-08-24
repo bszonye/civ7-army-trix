@@ -435,16 +435,35 @@ ATA.commitPlot = function(plot) {
   const unitID = this.Context.UnitID;
   const commanders = MapUnits.getUnits(plot.x, plot.y)
     .map(id => Units.get(id)).filter(u => u.isCommanderUnit);
-  function selectArmyUnit() {
+  function selectPackedUnit() {
     const unit = Units.get(unitID);
     const commander = commanders.find(u => u.armyId.id == unit.armyId.id);
     if (commander) {
       CommanderInteract.setArmyCommander(commander.id);
       UI.Player.selectUnit(unit.id);
     }
-    engine.off("UnitAddedToArmy", selectArmyUnit);
+    engine.off("UnitAddedToArmy", selectPackedUnit);
   }
-  engine.on("UnitAddedToArmy", selectArmyUnit);
+  engine.on("UnitAddedToArmy", selectPackedUnit);
+  return rv;
+}
+
+// patch remove-from-army interface mode
+import '/base-standard/ui/interface-modes/interface-mode-remove-from-army.js';
+const RFA = InterfaceMode.getInterfaceModeHandler("INTERFACEMODE_REMOVE_FROM_ARMY");
+
+// patch commitPlot method to select unit after unpacking
+const RFA_commitPlot = RFA.commitPlot;
+RFA.commitPlot = function(plot) {
+  const rv = RFA_commitPlot.call(this, plot);
+  // select unit within army
+  const unitID = this.Context.UnitID;
+  function seletUnpackedUnit() {
+    const unit = Units.get(unitID);
+    UI.Player.selectUnit(unit.id);
+    engine.off("UnitRemovedFromArmy", seletUnpackedUnit);
+  }
+  engine.on("UnitRemovedFromArmy", seletUnpackedUnit);
   return rv;
 }
 
