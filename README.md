@@ -1,4 +1,4 @@
-# Army Trix 1.0.0
+# Army Trix 1.0.1
 better unit command tools
 
 - better army portraits for packed units
@@ -30,12 +30,12 @@ the new Wake All action wakes up all units of the same type, canceling
 any active Sleep or Skip Turn actions.  for military units, the action
 also wakes all Land Military Units or all Naval Units, as appropriate.
 
-# missionary alerts
+## missionary alerts
 two new Toggle Alert actions let you optionally wake up sleeping
 Missionary units in response to nearby events.  the Missionary Units
 alert reacts to rival units in the same settlement, and the Spread
 Religion alert reacts to conversion.
 
-# new Center Selection hotkey
+## new Center Selection hotkey
 the `End` key centers the camera on the selected unit.
 (hotkeys are configurable in the Accessibility Options menu.)
