@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Database>
+    <InputActions>
+        <Replace ActionId="bz-center-selection" DeviceType="Keyboard" Name="LOC_UI_KBM_MAPPING_BZ_CENTER_SELECTION" Description="LOC_UI_KBM_MAPPING_BZ_CENTER_SELECTION_TT" />
+    </InputActions>
+    <InputContextConstraints>
+        <Replace ActionId="bz-center-selection" ContextId="Unit"/>
+    </InputContextConstraints>
+    <InputActionDefaultGestures>
+        <Replace ActionId="bz-center-selection" Index="0" GestureType="KBMouse" GestureData="KEY_END"/>
+    </InputActionDefaultGestures>
+</Database>

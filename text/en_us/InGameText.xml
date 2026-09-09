@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Database>
+    <EnglishText>
+        <Replace Tag="LOC_UI_KBM_MAPPING_BZ_CENTER_SELECTION">
+            <Text>Center Selection</Text>
+        </Replace>
+        <Replace Tag="LOC_UI_KBM_MAPPING_BZ_CENTER_SELECTION_TT">
+            <Text>Moves selected unit to center of the camera view</Text>
+        </Replace>
+        <Replace Tag="LOC_UNITOPERATION_BZ_WAKE_ALL_NAME">
+            <Text>Wake All</Text>
+        </Replace>
+        <Replace Tag="LOC_UNITOPERATION_BZ_WAKE_ALL_DESCRIPTION">
+            <Text>Wake up all units of the same type.</Text>
+        </Replace>
+        <Replace Tag="LOC_UNITOPERATION_BZ_WAKE_ALL_DOMAIN_LAND_DESCRIPTION">
+            <Text>Wake up all Land Military Units.</Text>
+        </Replace>
+        <Replace Tag="LOC_UNITOPERATION_BZ_WAKE_ALL_DOMAIN_SEA_DESCRIPTION">
+            <Text>Wake up all Naval Units.</Text>
+        </Replace>
+        <Replace Tag="LOC_UNITOPERATION_BZ_WAKE_ALL_DOMAIN_AIR_DESCRIPTION">
+            <Text>Wake up all Air Units.</Text>
+        </Replace>
+        <Replace Tag="LOC_UNITOPERATION_BZ_ALERT_MISSIONARY_NAME">
+            <Text>Toggle Alert (Missionary Units)</Text>
+        </Replace>
+        <Replace Tag="LOC_UNITOPERATION_BZ_ALERT_MISSIONARY_DESCRIPTION">
+            <Text>Optionally wake up sleeping units when a rival Missionary enters the same settlement.</Text>
+        </Replace>
+        <Replace Tag="LOC_UNITOPERATION_BZ_ALERT_MISSIONARY_FALSE_DESCRIPTION">
+            <Text>Optionally wake up sleeping units when a rival Missionary unit enters the same settlement.[n][STYLE:unit-action__tooltip-additional-desc]Units [b]sleep[/b] and ignore rivals.[/STYLE]</Text>
+        </Replace>
+        <Replace Tag="LOC_UNITOPERATION_BZ_ALERT_MISSIONARY_TRUE_DESCRIPTION">
+            <Text>Optionally wake up sleeping units when a rival Missionary unit enters the same settlement.[n][STYLE:unit-action__tooltip-additional-desc]Units are [b]alert[/b] to rivals.[/STYLE]</Text>
+        </Replace>
+        <Replace Tag="LOC_UNITOPERATION_BZ_ALERT_RELIGION_NAME">
+            <Text>Toggle Alert (Spread Religion)</Text>
+        </Replace>
+        <Replace Tag="LOC_UNITOPERATION_BZ_ALERT_RELIGION_DESCRIPTION">
+            <Text>Optionally wake up sleeping units in settlements that are not following your religion, or that are converted to another religion.</Text>
+        </Replace>
+        <Replace Tag="LOC_UNITOPERATION_BZ_ALERT_RELIGION_FALSE_DESCRIPTION">
+            <Text>Optionally wake up sleeping units in settlements that are not following your religion, or that are converted to another religion.[n][STYLE:unit-action__tooltip-additional-desc]Units [b]sleep[/b] and ignore other religions.[/STYLE]</Text>
+        </Replace>
+        <Replace Tag="LOC_UNITOPERATION_BZ_ALERT_RELIGION_TRUE_DESCRIPTION">
+            <Text>Optionally wake up sleeping units in settlements that are not following your religion, or that are converted to another religion.[n][STYLE:unit-action__tooltip-additional-desc]Units are [b]alert[/b] to other religions.[/STYLE]</Text>
+        </Replace>
+        <Replace Tag="LOC_UNITOPERATION_SLEEP_BZ_ALERT_NOTE">
+            <Text>Unit is [b]alert[/b] to conditions below.</Text>
+        </Replace>
+    </EnglishText>
+</Database>

@@ -1,0 +1,70 @@
+.bz-unit-actions .bz-missionary-alert-button .unit-action-button__button-icon,
+.bz-unit-actions .bz-religion-alert-button .unit-action-button__button-icon {
+  top: -0.1666666667rem;
+  left: 0;
+}
+.bz-unit-actions .bz-missionary-alert-button .unit-action-button__button-icon {
+  filter:  /* style missionary icon to match other buttons */
+   drop-shadow(0 0.0555555556rem 0 #444)
+   drop-shadow(0 0.0555555556rem 0 #444);
+}
+.bz-alert-flag {
+  background-image: url(blp:Action_Wake.png);
+}
+.bz-sleep-flag {
+  background-image: url(blp:Action_Sleep.png);
+}
+.bz-alert-flag,
+.bz-sleep-flag {
+  position: absolute;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-color: #333640;
+  border: 0.0555555556rem solid #8c7e62;
+  border-radius: 50%;
+  filter: drop-shadow(0 0.0566666667rem 0.1111111111rem black);
+  width: 1.2222222222rem;
+  height: 1.2222222222rem;
+  bottom: -0.3333333333rem;
+}
+.unit-actions__action-button:hover .bz-alert-flag, .unit-actions__action-button:focus .bz-alert-flag, .unit-actions__action-button.focused .bz-alert-flag, .unit-actions__action-button.pressed .bz-alert-flag, .unit-actions__action-button:hover .bz-sleep-flag, .unit-actions__action-button:focus .bz-sleep-flag, .unit-actions__action-button.focused .bz-sleep-flag, .unit-actions__action-button.pressed .bz-sleep-flag {
+  background-color: #9f9b92;
+  filter: drop-shadow(0 -0.0566666667rem 0.2222222222rem #e5d2ac);
+  transition-property: background-color, filter;
+  transition-duration: 0.25s;
+}
+
+.unit-actions__hidden-column-bg.triple-col {
+  animation-name: drawer-slide-triple;
+  animation-duration: 0.125s;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+}
+.unit-actions__hidden-column-bg.quad-col {
+  animation-name: drawer-slide-quad;
+  animation-duration: 0.125s;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+@keyframes drawer-slide-triple {
+  15% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+    width: 10.5555555556rem;
+  }
+}
+@keyframes drawer-slide-quad {
+  15% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+    width: 13.7777777778rem;
+  }
+}
+
+/* vim:set sw=2 et: */

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Mod id="bz-army-trix" version="1.0.0"
+    xmlns="ModInfo">
+    <Properties>
+        <Name>LOC_MOD_BZ_ARMY_TRIX_NAME</Name>
+        <Version>1.0.0</Version>
+        <Description>LOC_MOD_BZ_ARMY_TRIX_DESCRIPTION</Description>
+        <Authors>beezany</Authors>
+        <Package>Mod</Package>
+        <AffectsSavedGames>0</AffectsSavedGames>
+        <bzIcon>blp:nar_rew_promotion</bzIcon>
+        <bzIconGlow>#af1b1c</bzIconGlow>
+        <bzIconScale>75</bzIconScale>
+    </Properties>
+    <References>
+    </References>
+    <ActionCriteria>
+        <Criteria id="always">
+            <AlwaysMet/>
+        </Criteria>
+    </ActionCriteria>
+    <ActionGroups>
+        <ActionGroup id="bz-army-trix-shell" scope="shell" criteria="always">
+            <Properties>
+                <LoadOrder>1000</LoadOrder>
+            </Properties>
+            <Actions>
+                <UIScripts>
+                    <Item>ui/options/editors/bz-editor-keyboard-mapping.js</Item>
+                </UIScripts>
+                <UpdateDatabase>
+                    <Item>config/bz-input.xml</Item>
+                </UpdateDatabase>
+                <UpdateText>
+                    <Item>text/en_us/InGameText.xml</Item>
+                </UpdateText>
+            </Actions>
+        </ActionGroup>
+        <ActionGroup id="bz-army-trix-game" scope="game" criteria="always">
+            <Properties>
+                <LoadOrder>1000</LoadOrder>
+            </Properties>
+            <Actions>
+                <ImportFiles>
+                    <Item>icons/bz-chevrons-1.png</Item>
+                    <Item>icons/bz-chevrons-2.png</Item>
+                    <Item>icons/bz-chevrons-3.png</Item>
+                    <Item>ui/army-panel/bz-army-panel.css</Item>
+                    <Item>ui/unit-actions/bz-unit-actions.css</Item>
+                </ImportFiles>
+                <UIScripts>
+                    <Item>ui/army-panel/bz-army-panel.js</Item>
+                    <Item>ui/bz-data/bz-army-trix-data.js</Item>
+                    <Item>ui/input/bz-hotkey-manager.js</Item>
+                    <Item>ui/options/editors/bz-editor-keyboard-mapping.js</Item>
+                    <Item>ui/unit-actions/bz-unit-actions.js</Item>
+                </UIScripts>
+                <UpdateText>
+                    <Item>text/en_us/InGameText.xml</Item>
+                </UpdateText>
+            </Actions>
+        </ActionGroup>
+    </ActionGroups>
+    <LocalizedText>
+        <File>text/en_us/ModInfoText.xml</File>
+    </LocalizedText>
+</Mod>
