@@ -6,7 +6,7 @@ better unit command tools
 - quick unpack: selecting a packed unit automatically starts deployment
 - new Wake All action to quickly wake up multiple sleeping units
 - new alerts for sleeping Missionary units
-- new hotkey (`End`) to center the selected unit
+- new `End` hotkey to center the selected unit
 - compatible with slothoth's Action Panel Improvements mod
 
 ## army portrait overlays
