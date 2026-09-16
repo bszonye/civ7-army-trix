@@ -1,4 +1,5 @@
 import HotkeyManager from '/core/ui/input/hotkey-manager.js';
+import { InputHandlerState } from '/core/ui/input/input-support.js';
 import { ComponentID } from '/core/ui/utilities/utilities-component-id.js';
 
 function getArmyCommander(player, id) {
@@ -33,7 +34,7 @@ HotkeyManager.handleInput = function(...args) {
                 } else {
                     Camera.lookAtPlot(unit.location);
                 }
-                return false;
+                return InputHandlerState.Handled;
             }
         }
     }
