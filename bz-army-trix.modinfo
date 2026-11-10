@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Mod id="bz-army-trix" version="1.0.1"
+<Mod id="bz-army-trix" version="10001"
     xmlns="ModInfo">
     <Properties>
         <Name>LOC_MOD_BZ_ARMY_TRIX_NAME</Name>
