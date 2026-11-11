@@ -61,26 +61,20 @@ class bzArmyPanel {
     const tail = document.createElement("div");
     tail.classList.value = "flex flex-row items-end w-full mb-2\\.5";
     infoBG.appendChild(tail);
-    // promotion
-    const promo = document.createElement("div");
-    promo.classList.value = "-m-px bg-center bg-contain bg-no-repeat border border-black rounded-full";
+    // upgrade availability
+    const upgradeArrow = document.createElement("div");
+    upgradeArrow.classList.value = "-m-px bg-center bg-contain bg-no-repeat border border-black rounded-full";
     const xp = unit.Experience;
-    if (xp?.canPromote) {
-      const promote = GameInfo.UnitCommands.lookup("UNITCOMMAND_PROMOTE");
-      const canPromote = xp.getStoredCommendations || xp.getStoredPromotionPoints;
-      promo.classList.add("size-9", "bz-promotion-ready");
-      promo.style.backgroundImage = `url(${promote.Icon})`;
-      promo.classList.toggle("invisible", !canPromote);
-    } else {
-      const upgrade = GameInfo.UnitCommands.lookup("UNITCOMMAND_UPGRADE");
+    if (unitInfo.Tier) {
+      const upgradeInfo = GameInfo.UnitCommands.lookup("UNITCOMMAND_UPGRADE");
       const canUpgrade = Game.UnitCommands.canStart(
-        unit.id, upgrade.CommandType, { X: -9999, Y: -9999 }, true
+        unit.id, upgradeInfo.CommandType, { X: -9999, Y: -9999 }, true
       ).Success;
-      promo.classList.add("size-6", "bz-upgrade-ready");
-      promo.style.backgroundImage = `url(${upgrade.Icon})`;
-      promo.classList.toggle("invisible", !canUpgrade);
+      upgradeArrow.classList.add("size-6", "bz-upgrade-ready");
+      upgradeArrow.style.backgroundImage = `url(${upgradeInfo.Icon})`;
+      upgradeArrow.classList.toggle("invisible", !canUpgrade);
     }
-    head.appendChild(promo);
+    head.appendChild(upgradeArrow);
     // movement
     const move = document.createElement("div");
     move.classList.value = "text-center text-2xs leading-none";
@@ -89,7 +83,6 @@ class bzArmyPanel {
     const canMove = unit.Movement?.canMove;
     const moveValue = `${moves}/${maxMoves}`;
     unitBG.classList.toggle("opacity-60", !canMove);
-    // move.innerHTML = Locale.stylize(`[icon:Action_Move][n]${moveValue}`);
     move.textContent = moveValue;
     head.appendChild(move);
     // health
@@ -100,17 +93,17 @@ class bzArmyPanel {
     tail.appendChild(health);
     // unit level or tier
     const rank = document.createElement("div");
-    if (unit.Experience?.canPromote) {
-      rank.classList.value = "text-xl -mr-1";
-      rank.style.filter = "saturate(0)";
+    if (xp?.canPromote) {
+      const canPromote = xp.getStoredCommendations || xp.getStoredPromotionPoints;
+      rank.classList.value = "bz-commander-rank text-xl -mr-1";
+      rank.classList.toggle("bz-promotion-available", canPromote);
       rank.innerHTML =
         Locale.stylize(`${unit.Experience.getLevel}[icon:NAR_REW_PROMOTION]`);
     } else if (unitInfo.Tier) {
       const tier = unitInfo.Tier;
-      rank.classList.value = "size-8 bg-center bg-contain bg-no-repeat -mx-1\\.25";
+      rank.classList.value = "bz-unit-tier -mx-1\\.25";
       const chevrons = `url(fs://game/bz-army-trix/icons/bz-chevrons-${tier}.png)`;
       const yrem = GlobalScaling.pixelsToRem((tier - 3) * 4);
-      rank.style.filter = "saturate(0)";
       rank.style.marginBottom = `${yrem}rem`;
       rank.style.backgroundImage = chevrons;
     }
