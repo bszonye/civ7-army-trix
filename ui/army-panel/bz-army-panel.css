@@ -1,11 +1,22 @@
 .bz-army-panel .army-panel__action-button {
   background-color: transparent;
 }
-.bz-army-panel .bz-promotion-ready {
-  background-color: #0a91b6;
-}
 .bz-army-panel .bz-upgrade-ready {
   background-color: #6c655b;
+  filter: saturate(0);
+}
+.bz-army-panel .bz-commander-rank {
+  filter: saturate(0);
+}
+.bz-army-panel .bz-promotion-available {
+  animation: promotion-available-pulse 2s ease-in-out infinite;
+}
+.bz-army-panel .bz-unit-tier {
+  width: 1.7777777778rem;
+  height: 1.7777777778rem;
+  background-position: center;
+  background-size: contain;
+  background-repeat: none;
 }
 
 /* compatibility with sloth's action panel */

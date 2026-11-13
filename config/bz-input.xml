@@ -5,6 +5,7 @@
     </InputActions>
     <InputContextConstraints>
         <Replace ActionId="bz-center-selection" ContextId="Unit"/>
+        <Replace ActionId="bz-center-selection" ContextId="World"/>
     </InputContextConstraints>
     <InputActionDefaultGestures>
         <Replace ActionId="bz-center-selection" Index="0" GestureType="KBMouse" GestureData="KEY_END"/>
